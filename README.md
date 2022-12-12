@@ -25,3 +25,17 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+
+## Setting api
+Utilizza l’api http://localhost:4201/api/movie/popular
+(vedi la struttura utilizzando postman o thunder client di vscode)
+
+Utilizza l’api http://localhost:4201/api/favorites?userId=userId
+(vedi la struttura utilizzando postman o thunder client di vscode) per recuperare i favoriti di un utente
+
+http://localhost:4201/api/favorites
+(vedi la struttura utilizzando postman o thunder client di vscode) con delete e post passa l’id del favorito
+
+Per la cover usare come baseurl
+http://image.tmdb.org/t/p/w500+poster_path
