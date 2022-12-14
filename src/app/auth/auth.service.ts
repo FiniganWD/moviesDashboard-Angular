@@ -1,22 +1,24 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { BehaviorSubject, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs';
+import { BehaviorSubject} from 'rxjs';
+import { tap } from 'rxjs';
 import { Router } from '@angular/router';
 
 export interface AuthData { // da spostare in un'interfaccia
   accessToken: string;
   user: {
-    email: string;
-    id: number;
-    name: string;
+    id: number,
+    name: string,
+    email: string,
+    password: string
   };
 }
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthService {
 
   jwtHelper = new JwtHelperService();
@@ -27,30 +29,30 @@ export class AuthService {
   timeoutLogout: any;
 
   constructor(private http: HttpClient, private router: Router) {
-
-  this.restore();
+    this.restore();
   }
+
   login(data: {email: string; password: string}) {
     return this.http.post<AuthData>(`${this.url}/login`, data).pipe(
       tap((data) => {
         console.log(data);
         this.authSubj.next(data);
         localStorage.setItem('user', JSON.stringify(data));
-        this.autoLogout(data); // da fare autoLogout
-      }), catchError(this.errors) // gestire gli errori
+        this.autoLogout(data);
+      })
     );
   }
+
   registration(data: {name: string; email: string; password: string}) {
-    return this.http.post(`${this.url}/signup`, data).pipe(
-      catchError(this.errors) //gestire gli errori
-    );
+    return this.http.post(`${this.url}/signup`, data);
   };
+
   restore() { //mantenere utente in localstorage
-    const userJ = localStorage.getItem('user');
-    if(!userJ) {
+    const user = localStorage.getItem('user');
+    if(!user) {
       return
     };
-    const userdata: AuthData = JSON.parse(userJ);
+    const userdata: AuthData = JSON.parse(user);
     if(this.jwtHelper.isTokenExpired(userdata.accessToken)) {
       return;
     };
@@ -58,6 +60,7 @@ export class AuthService {
     this.authSubj.next(userdata);
     this.autoLogout(userdata);
   };
+
   logout() { //rimuovi user
     this.authSubj.next(null);
     localStorage.removeItem('user');
@@ -66,23 +69,13 @@ export class AuthService {
       clearTimeout(this.timeoutLogout);
     };
   };
+
   autoLogout(data: AuthData) { // esci e rimuovi user a token expired
     const expiredDate = this.jwtHelper.getTokenExpirationDate(data.accessToken) as Date; //cast
     const exMs = expiredDate.getTime() - new Date().getTime();
     this.timeoutLogout = setTimeout( () => {
       this.logout();
     }, exMs);
-  };
-  //errori
-  private errors(errore: any) {
-    switch (errore.error) {
-      case 'Email already exists':
-        return throwError('Email già utilizzata');
-        break;
-      default:
-        return throwError('Qualcosa è andato storto, riprova!');
-        break;
-    };
   };
 
 }

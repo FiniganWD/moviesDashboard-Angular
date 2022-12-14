@@ -1,23 +1,35 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/auth/auth.service';
-import { MoviesService, TotMovie } from 'src/app/movies.service';
+
 
 @Component({
   selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  template: `
+    <app-navbar></app-navbar>
+    <div class="container text-center text-white">
+        <h2 class="mb-4">Dettagli utente: </h2>
+        <p class="mb-4">Nome: {{ user.user.name }}</p>
+        <p>Email: {{ user.user.email }}</p>
+    </div>
+  `,
+  styles: [
+    `.container{
+      margin-top: 100px;
+  }`
+  ]
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(private srvAuth: AuthService, private srvMovies: MoviesService) { }
+  user: any = []
 
-  users$ = this.srvAuth.users$;
-  favourites!: any;
-  movies!: TotMovie[];
+  constructor() { }
+
+
 
   //chiamata
-  async ngOnInit() {
-    this.movies = await this.srvMovies.getMoviesPop();
+  ngOnInit(): void {
+    let userLogger: any = localStorage.getItem('user');
+    this.user = JSON.parse(userLogger);
+    console.log(userLogger);
   }
 
 }
