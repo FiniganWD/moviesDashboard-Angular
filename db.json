@@ -1,12 +1,6 @@
 {
   "users": [
     {
-      "email": "alessandrofinizio89@gmail.com",
-      "password": "$2a$10$C96LEFtsPpxWw5ngTxnFLe3djJBEGCwMAa5GAiPxaKHfjvRteuDqq",
-      "name": "Alessandro",
-      "id": 1
-    },
-    {
       "email": "mario@rossi.it",
       "password": "$2a$10$wRQg0rGEuHDesFprK/MV3O9lGT6fgLsd3O/pFFrPMH0hZVj8QGLNa",
       "name": "MarioRossi",
